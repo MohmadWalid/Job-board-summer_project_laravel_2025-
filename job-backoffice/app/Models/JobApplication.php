@@ -19,7 +19,7 @@ class JobApplication extends Model
         'ai_generated_feedback',
         'status',
         'user_id',
-        'job_id',
+        'job_vacancy_id',
         'resume_id'
     ];
 
@@ -30,7 +30,7 @@ class JobApplication extends Model
 
     public function job_vacancy(): BelongsTo
     {
-        return $this->belongsTo(JobVacancy::class, 'job_id', 'id');
+        return $this->belongsTo(JobVacancy::class, 'job_vacancy_id', 'id');
     }
 
     public function resume(): BelongsTo

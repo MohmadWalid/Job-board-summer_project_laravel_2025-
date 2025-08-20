@@ -16,7 +16,6 @@ return new class extends Migration
             $table->decimal('ai_generated_score', 5, 2)->default(0.00);
             $table->mediumText('ai_generated_feedback')->nullable();
             $table->enum('status', ['Pending', 'Accepted', 'Rejected'])->default('Pending');
-            $table->decimal('salary', 10, 2);
             $table->timestamps();
             $table->softDeletes();
 
@@ -25,7 +24,7 @@ return new class extends Migration
                 ->constrained('users')
                 ->restrictOnDelete();
 
-            $table->foreignUuid('job_id')
+            $table->foreignUuid('job_vacancy_id')
                 ->constrained('job_vacancies')
                 ->restrictOnDelete();
 

@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_category', function (Blueprint $table) {
+        Schema::create('category_job_vacancy', function (Blueprint $table) {
 
             // Relationships
-            $table->foreignUuid('job_id')
+            $table->foreignUuid('job_vacancy_id')
                 ->constrained('job_vacancies')
                 ->restrictOnDelete();
 
@@ -23,7 +23,7 @@ return new class extends Migration
                 ->restrictOnDelete();
 
             // Composite primary key
-            $table->primary(['job_id', 'category_id']);
+            $table->primary(['job_vacancy_id', 'category_id']);
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job_category');
+        Schema::dropIfExists('category_job_vacancy');
     }
 };
