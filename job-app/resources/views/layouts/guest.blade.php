@@ -1,30 +1,64 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+{{-- resources/views/layouts/guest.blade.php --}}
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<x-main-layout>
+    <div class="min-h-screen flex flex-col">
+        <!-- Navigation -->
+        <nav class="w-full px-6 py-6 lg:px-12">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3 opacity-0 animate-fade-in-up">
+                    <a href="{{ url('/') }}" class="flex items-center space-x-3">
+                        <div
+                            class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <span class="text-2xl font-bold gradient-text">Shaghlni</span>
+                    </a>
+                </div>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-6 opacity-0 animate-fade-in-up"
+                    style="animation-delay: 0.2s;">
+                    <a href="{{ route('login') }}"
+                        class="{{ request()->routeIs('login') ? 'text-white font-semibold' : 'text-gray-300 hover:text-white' }} transition-colors duration-300">
+                        Login
+                    </a>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}"
+                            class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                            Sign Up
+                        </a>
+                    @endif
+                </div>
             </div>
+        </nav>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {{ $slot }}
+        <!-- Main Content Area for Forms -->
+        <main class="flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
+            <div class="w-full max-w-md">
+                <div class="opacity-0 animate-fade-in-up space-y-8">
+                    {{ $slot }}
+                </div>
+            </div>
+        </main>
+
+        <!-- Mobile Bottom Navigation -->
+        <div class="md:hidden fixed bottom-0 left-0 right-0 glass-effect border-t border-gray-800 px-6 py-4">
+            <div class="flex items-center justify-around gap-3">
+                <a href="{{ route('login') }}"
+                    class="flex-1 px-6 py-2.5 {{ request()->routeIs('login') ? 'bg-gradient-to-r from-indigo-600 to-purple-600' : 'glass-effect' }} text-white rounded-lg font-medium text-center transition-all">
+                    Login
+                </a>
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}"
+                        class="flex-1 px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium text-center transition-all transform hover:scale-105">
+                        Sign Up
+                    </a>
+                @endif
             </div>
         </div>
-    </body>
-</html>
+    </div>
+</x-main-layout>
