@@ -27,10 +27,7 @@
                         Login
                     </a>
                     @if (Route::has('register'))
-                        <a href="{{ route('register') }}"
-                            class="px-6 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-                            Sign Up
-                        </a>
+                        <x-submit-button href="{{ route('register') }}" label="Sign Up"></x-submit-button>
                     @endif
                 </div>
             </div>
