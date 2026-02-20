@@ -15,15 +15,7 @@
 - [Features](#-features)
 - [Screenshots](#-screenshots)
 - [Tech Stack](#-tech-stack)
-- [Requirements](#-requirements)
-- [Installation](#-installation)
-- [Configuration](#-configuration)
 - [Usage](#-usage)
-- [Project Structure](#-project-structure)
-- [Database Schema](#-database-schema)
-- [API Documentation](#-api-documentation)
-- [Contributing](#-contributing)
-- [License](#-license)
 - [Contact](#-contact)
 
 ---
@@ -127,7 +119,5 @@
 <div align="center">
 
 **Made with ❤️ by [Mohmad Walid](https://github.com/MohmadWalid)**
-
-⭐ Star this repository if you find it helpful!
 
 </div>
