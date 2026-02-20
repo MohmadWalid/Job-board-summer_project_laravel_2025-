@@ -12,7 +12,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'role:job-seeker'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/job-applications', [JobApplicationController::class, 'index'])->name('job-applications.index');
@@ -24,14 +24,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Tested Routes
-    Route::get('/test-gemini', function () {
-        $response = Gemini::generativeModel(model: 'gemini-2.0-flash')  // or just Gemini::geminiFlash()
-            ->generateContent('Write a very short funny job interview question for a Laravel developer');
-
-        return $response->text();
-    });
 });
 
 require __DIR__ . '/auth.php';
