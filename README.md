@@ -16,8 +16,6 @@
 - [Screenshots](#-screenshots)
 - [Tech Stack](#-tech-stack)
 - [Usage](#-usage)
-- [Contact](#-contact)
-
 ---
 
 ## ✨ Features
