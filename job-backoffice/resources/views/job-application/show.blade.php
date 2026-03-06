@@ -8,7 +8,7 @@
         <div class="flex items-center justify-between">
 
             <!-- Back Button -->
-            <x-buttons.back-button href="{{ route('job-applications.index') }}">Back</x-back-button>
+            <x-buttons.back-button href="{{ route('job-applications.index') }}">Back</x-buttons.back-button>
 
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     {{ $jobApplication->user->name }} | Applied to {{ $jobApplication->job_vacancy->title }}
@@ -137,4 +137,6 @@
                     ])
                 @endif
             </div>
+        </div>
+    </div>
 </x-app-layout>

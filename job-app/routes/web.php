@@ -1,12 +1,10 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DeepSeekController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobVacancyController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use Gemini\Laravel\Facades\Gemini;
 
 Route::get('/', function () {
     return view('welcome');

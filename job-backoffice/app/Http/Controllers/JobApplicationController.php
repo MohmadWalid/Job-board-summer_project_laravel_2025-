@@ -15,7 +15,7 @@ class JobApplicationController extends Controller
      */
     public function index(Request $request)
     {
-        $query = JobApplication::latest();
+        $query = JobApplication::with(['job_vacancy.company', 'user', 'resume'])->latest();
 
         // 2. Filter by Company Owner role
         if (Auth::user()->role === 'company-owner') {

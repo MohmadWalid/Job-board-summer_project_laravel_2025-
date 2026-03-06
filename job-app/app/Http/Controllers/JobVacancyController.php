@@ -9,9 +9,6 @@ use App\Models\Resume;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use OpenAI\Laravel\Facades\OpenAI;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 
 class JobVacancyController extends Controller
 {
@@ -62,7 +59,7 @@ class JobVacancyController extends Controller
             'job_vacancy_id' => $jobVacancy->id,
             'resume_id' => $resumeId,
             'user_id' => Auth::id(),
-            'status' => 'pending',
+            'status' => 'Pending',
             'ai_generated_score' => 0,
             'ai_generated_feedback' => '',
         ]);

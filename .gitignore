@@ -1,0 +1,8 @@
+# Ignore vendor directories in all subprojects
+job-app/vendor/
+job-backoffice/vendor/
+job-shared/vendor/
+job-app/node_modules/
+job-backoffice/node_modules/
+job-app/public/build/
+job-backoffice/public/build/
