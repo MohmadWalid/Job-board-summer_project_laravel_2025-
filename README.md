@@ -40,9 +40,9 @@ This project was built to go **beyond just writing code** — practicing the ful
 | Document | File |
 |---|---|
 | 🏛️ Project Structure | [📄 View PDF](docs/Project_Structure.pdf) |
-| 🗄️ Database ERD | [📄 View PDF](docs/ERD.pdf) |
+| 🗄️ Database ERD | [📄 View PDF](docs/ERD.PDF) |
 | 🧑‍💼 Job Seeker Flow | [📄 View PDF](docs/Job_Seeker_Flow.pdf) |
-| 🛠️ Employer & Admin Flow | [📄 View PDF](docs/Employer_Admin_Flow.pdf) |
+| 🛠️ Employer & Admin Flow | [📄 View PDF](docs/Employer&Admin_Flow.pdf) |
 
 ---
 
