@@ -15,7 +15,7 @@
         }
     ],
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "deepseek-php/deepseek-laravel": "^2.0",
         "gemini-api-php/client": "^1.7",
         "google-gemini-php/laravel": "^2.0",
