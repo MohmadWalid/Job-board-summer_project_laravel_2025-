@@ -66,7 +66,7 @@ This project was built to go **beyond just writing code** — practicing the ful
 **Backend:** Laravel 11.x · PHP 8.2+ · Eloquent ORM · Laravel Breeze  
 **Frontend:** Blade · Tailwind CSS 4.x · Alpine.js 3.x · Vite  
 **Database:** MariaDB (Docker) · phpMyAdmin (Docker)  
-**DevOps:** Git · WSL 2 (Ubuntu) · Docker · InfinityFree (hosting)
+**DevOps:** Git · WSL 2 (Ubuntu) · Docker · Railway (hosting)
 
 ---
 
@@ -78,33 +78,6 @@ This project was built to go **beyond just writing code** — practicing the ful
 - 🔒 Role-based access control — `admin` / `company-owner` / `job-seeker`
 - 📈 Analytics dashboard with active users, vacancies, and conversion rates
 - 🗑️ Soft delete & restore for companies, vacancies, and applications
-
----
-
-## 💻 Quick Start
-
-```bash
-# 1. Clone the repo
-git clone https://github.com/MohmadWalid/Job-board-summer_project_laravel_2025-.git
-
-# 2. Start Docker (MariaDB + phpMyAdmin)
-docker compose up -d
-
-# 3. Setup each app (repeat for job-app and job-backoffice)
-composer install
-npm install
-cp .env.example .env
-php artisan key:generate
-php artisan migrate --seed
-npm run dev
-php artisan serve
-```
-
-| Service | URL |
-|---|---|
-| Job Seeker App | http://localhost:8000 |
-| Admin Back Office | http://localhost:8001 |
-| phpMyAdmin | http://localhost:8080 |
 
 ---
 
