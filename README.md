@@ -13,7 +13,7 @@
 
 > A full-featured job board platform built with Laravel as a **summer learning project** — practicing the complete software engineering lifecycle from design to deployment.
 
-🌐 **Live Demo:** [dash.infinityfree.com](https://dash.infinityfree.com/)
+🌐 **Live Demo:** [Job Seeker App](https://job-app.up.railway.app/) · [Admin Back Office](https://job-backoffice.up.railway.app/login)
 
 </div>
 
