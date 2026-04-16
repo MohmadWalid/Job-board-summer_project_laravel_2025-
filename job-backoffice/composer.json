@@ -10,15 +10,14 @@
     "repositories": [
         {
             "type": "path",
-            "url": "../../job-shared"
+            "url": "../job-shared"
         }
     ],
     "license": "MIT",
     "require": {
         "php": "^8.4",
         "laravel/framework": "^12.0",
-        "laravel/tinker": "^2.10.1",
-        "job/shared": "*"
+        "laravel/tinker": "^2.10.1"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.6",

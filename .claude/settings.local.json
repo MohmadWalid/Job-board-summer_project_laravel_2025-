@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer update:*)",
+      "Bash(wsl -d Ubuntu -- bash -c \"cd /home/lido/summer_project_laravel_2025/job-app && composer update --no-scripts 2>&1\")",
+      "Bash(wsl -d Ubuntu -- bash -c \"which php && php -v\")",
+      "Bash(wsl -d Ubuntu -- bash -lc \"which php && php -v\")",
+      "Bash(wsl -d Ubuntu -- find /usr -name \"php*\" -type f)",
+      "Bash(wsl -d Ubuntu -- bash -c \"ls /usr/bin/php* 2>/dev/null; ls /usr/local/bin/php* 2>/dev/null; ls ~/.config/herd/bin/php* 2>/dev/null; echo done\")",
+      "Read(///wsl.localhost/Ubuntu/home/lido/summer_project_laravel_2025/**)",
+      "Bash(/c/Users/mohma/.config/herd/bin/php84 /c/ProgramData/ComposerSetup/bin/composer update --no-scripts)",
+      "Bash(/c/Users/mohma/.config/herd/bin/php84/php.exe /c/ProgramData/ComposerSetup/bin/composer update --no-scripts)",
+      "Bash(/c/Users/mohma/.config/herd/bin/php84/php.exe /c/ProgramData/ComposerSetup/bin/composer.phar update --no-scripts)"
+    ]
+  }
+}
