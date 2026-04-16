@@ -8,12 +8,6 @@
         "framework"
     ],
     "license": "MIT",
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../job-shared"
-        }
-    ],
     "require": {
         "php": "^8.4",
         "deepseek-php/deepseek-laravel": "^2.0",
