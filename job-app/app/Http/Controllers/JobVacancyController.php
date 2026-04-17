@@ -14,17 +14,6 @@ use InvalidArgumentException;
 
 class JobVacancyController extends Controller
 {
-    private ResumeParserService $resumeParser;
-    private ApplicationEvaluatorService $evaluator;
-
-    public function __construct(
-        ResumeParserService $resumeParser,
-        ApplicationEvaluatorService $evaluator
-    ) {
-        $this->resumeParser = $resumeParser;
-        $this->evaluator = $evaluator;
-    }
-
     /**
      * Display the specified resource.
      */
@@ -45,10 +34,18 @@ class JobVacancyController extends Controller
     }
 
     /**
-     * Store a new job application
+     * Store a new job application.
+     *
+     * Services are injected via method injection (not constructor) to avoid
+     * breaking other routes if a service dependency (e.g. smalot/pdfparser)
+     * is not installed.
      */
-    public function storeApplication(StoreJobApplicationRequest $request, JobVacancy $jobVacancy)
-    {
+    public function storeApplication(
+        StoreJobApplicationRequest $request,
+        JobVacancy $jobVacancy,
+        ResumeParserService $resumeParser,
+        ApplicationEvaluatorService $evaluator
+    ) {
         // 1. Check if user already applied to this vacancy
         $existingApplication = JobApplication::where('job_vacancy_id', $jobVacancy->id)
             ->where('user_id', Auth::id())
@@ -67,7 +64,7 @@ class JobVacancyController extends Controller
                     ->where('user_id', Auth::id())
                     ->firstOrFail();
             } else {
-                $resume = $this->uploadNewResume($request->file('resume'));
+                $resume = $this->uploadNewResume($request->file('resume'), $resumeParser);
             }
         } catch (InvalidArgumentException $e) {
             return redirect()
@@ -77,7 +74,7 @@ class JobVacancyController extends Controller
         }
 
         // 3. Evaluate resume against job vacancy (graceful — never blocks saving)
-        $evaluation = $this->evaluator->evaluate($resume, $jobVacancy);
+        $evaluation = $evaluator->evaluate($resume, $jobVacancy);
 
         // 4. Create the application
         JobApplication::create([
@@ -98,9 +95,9 @@ class JobVacancyController extends Controller
      * Parse a new PDF resume in-memory and persist only the structured data.
      * The original PDF file is discarded at the end of the request lifecycle.
      */
-    private function uploadNewResume($file): Resume
+    private function uploadNewResume($file, ResumeParserService $resumeParser): Resume
     {
-        $parsedData = $this->resumeParser->parse($file);
+        $parsedData = $resumeParser->parse($file);
 
         $resume = Resume::create([
             'file_name'       => $file->getClientOriginalName(),
