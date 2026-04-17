@@ -6,12 +6,25 @@ use App\Http\Requests\StoreJobApplicationRequest;
 use App\Models\JobApplication;
 use App\Models\JobVacancy;
 use App\Models\Resume;
-use Illuminate\Http\Request;
+use App\Services\ApplicationEvaluatorService;
+use App\Services\ResumeParserService;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 
 class JobVacancyController extends Controller
 {
+    private ResumeParserService $resumeParser;
+    private ApplicationEvaluatorService $evaluator;
+
+    public function __construct(
+        ResumeParserService $resumeParser,
+        ApplicationEvaluatorService $evaluator
+    ) {
+        $this->resumeParser = $resumeParser;
+        $this->evaluator = $evaluator;
+    }
+
     /**
      * Display the specified resource.
      */
@@ -36,14 +49,7 @@ class JobVacancyController extends Controller
      */
     public function storeApplication(StoreJobApplicationRequest $request, JobVacancy $jobVacancy)
     {
-        // Get resume ID based on option
-        if ($request->resume_option === 'existing') {
-            $resumeId = $request->existing_resume_id;
-        } else {
-            $resumeId = $this->uploadNewResume($request->file('resume'));
-        }
-
-        // Check if user already applied with this resume
+        // 1. Check if user already applied to this vacancy
         $existingApplication = JobApplication::where('job_vacancy_id', $jobVacancy->id)
             ->where('user_id', Auth::id())
             ->first();
@@ -54,46 +60,65 @@ class JobVacancyController extends Controller
                 ->with('error', 'You have already applied to this job.');
         }
 
-        // Create application
+        // 2. Resolve the resume
+        try {
+            if ($request->resume_option === 'existing') {
+                $resume = Resume::where('id', $request->existing_resume_id)
+                    ->where('user_id', Auth::id())
+                    ->firstOrFail();
+            } else {
+                $resume = $this->uploadNewResume($request->file('resume'));
+            }
+        } catch (InvalidArgumentException $e) {
+            return redirect()
+                ->back()
+                ->withErrors(['resume' => $e->getMessage()])
+                ->withInput();
+        }
+
+        // 3. Evaluate resume against job vacancy (graceful — never blocks saving)
+        $evaluation = $this->evaluator->evaluate($resume, $jobVacancy);
+
+        // 4. Create the application
         JobApplication::create([
-            'job_vacancy_id' => $jobVacancy->id,
-            'resume_id' => $resumeId,
-            'user_id' => Auth::id(),
-            'status' => 'Pending',
-            'ai_generated_score' => 0,
-            'ai_generated_feedback' => '',
+            'job_vacancy_id'        => $jobVacancy->id,
+            'resume_id'             => $resume->id,
+            'user_id'               => Auth::id(),
+            'status'                => 'Pending',
+            'ai_generated_score'    => $evaluation['score'],
+            'ai_generated_feedback' => $evaluation['feedback'],
         ]);
-
-
-        #TODO: Evaluate Job application using AI API
-        #TODO: Extract info from Resume
 
         return redirect()
             ->route('job-applications.index')
-            ->with('success', 'Application submitted successfully!');
+            ->with('success', 'Application submitted successfully! Your AI compatibility score: ' . $evaluation['score'] . '%');
     }
 
-    private function uploadNewResume($file)
+    /**
+     * Parse a new PDF resume in-memory and persist only the structured data.
+     * The original PDF file is discarded at the end of the request lifecycle.
+     */
+    private function uploadNewResume($file): Resume
     {
-        $fileName = 'resume_' . time() . '.' . $file->extension();
-
-        #TODO:Store file (you can enable cloud storage later)
-        // $path = $file->storeAs('resumes', $fileName, 'cloud');
+        $parsedData = $this->resumeParser->parse($file);
 
         $resume = Resume::create([
-            'file_name' => $file->getClientOriginalName(),
-            'file_url' => 'Just A test',
-            'user_id' => Auth::id(),
-            'contact_details' => json_encode([
-                'name' => Auth::user()->name,
-                'email' => Auth::user()->email,
-            ]),
-            'summary' => '',
-            'skills' => '',
-            'experience' => '',
-            'education' => '',
+            'file_name'       => $file->getClientOriginalName(),
+            'file_url'        => 'N/A',
+            'user_id'         => Auth::id(),
+            'contact_details' => $parsedData['contact_details'],
+            'summary'         => $parsedData['summary'],
+            'skills'          => $parsedData['skills'],
+            'experience'      => $parsedData['experience'],
+            'education'       => $parsedData['education'],
         ]);
 
-        return $resume->id;
+        Log::info('Resume parsed and stored', [
+            'resume_id' => $resume->id,
+            'user_id' => Auth::id(),
+            'file_name' => $file->getClientOriginalName(),
+        ]);
+
+        return $resume;
     }
 }
