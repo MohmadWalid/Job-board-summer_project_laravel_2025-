@@ -10,7 +10,6 @@ use App\Services\ApplicationEvaluatorService;
 use App\Services\ResumeParserService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use InvalidArgumentException;
 
 class JobVacancyController extends Controller
 {
@@ -37,8 +36,7 @@ class JobVacancyController extends Controller
      * Store a new job application.
      *
      * Services are injected via method injection (not constructor) to avoid
-     * breaking other routes if a service dependency (e.g. smalot/pdfparser)
-     * is not installed.
+     * breaking other routes if a service dependency is unavailable.
      */
     public function storeApplication(
         StoreJobApplicationRequest $request,
@@ -66,10 +64,16 @@ class JobVacancyController extends Controller
             } else {
                 $resume = $this->uploadNewResume($request->file('resume'), $resumeParser);
             }
-        } catch (InvalidArgumentException $e) {
+        } catch (\Throwable $e) {
+            Log::error('Resume processing failed', [
+                'user_id' => Auth::id(),
+                'job_vacancy_id' => $jobVacancy->id,
+                'error' => $e->getMessage(),
+            ]);
+
             return redirect()
                 ->back()
-                ->withErrors(['resume' => $e->getMessage()])
+                ->withErrors(['resume' => 'Failed to process your resume: ' . $e->getMessage()])
                 ->withInput();
         }
 

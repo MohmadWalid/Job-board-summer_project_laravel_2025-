@@ -5,17 +5,15 @@ namespace App\Services;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
-use Smalot\PdfParser\Parser as PdfParser;
+use RuntimeException;
 
 class ResumeParserService
 {
     private GroqApiService $groqApi;
-    private PdfParser $pdfParser;
 
     public function __construct(GroqApiService $groqApi)
     {
         $this->groqApi = $groqApi;
-        $this->pdfParser = new PdfParser();
     }
 
     /**
@@ -30,6 +28,7 @@ class ResumeParserService
      *   education: string
      * }
      * @throws InvalidArgumentException  If text cannot be extracted from the PDF.
+     * @throws RuntimeException          If the Groq API call fails.
      */
     public function parse(UploadedFile $file): array
     {
@@ -41,12 +40,24 @@ class ResumeParserService
 
     /**
      * Extract raw text from a PDF file in-memory.
+     * PdfParser is instantiated lazily to avoid class-not-found errors
+     * at service resolution time.
      */
     private function extractTextFromPdf(UploadedFile $file): string
     {
         try {
-            $pdf = $this->pdfParser->parseFile($file->getRealPath());
+            // Lazy instantiation — avoids fatal error if package is missing
+            $parserClass = 'Smalot\PdfParser\Parser';
+
+            if (!class_exists($parserClass)) {
+                throw new RuntimeException('PDF parser package (smalot/pdfparser) is not installed.');
+            }
+
+            $pdfParser = new $parserClass();
+            $pdf = $pdfParser->parseFile($file->getRealPath());
             $text = $pdf->getText();
+        } catch (RuntimeException $e) {
+            throw $e; // Re-throw our own RuntimeException
         } catch (\Exception $e) {
             Log::error('PDF parsing failed', [
                 'filename' => $file->getClientOriginalName(),
@@ -71,6 +82,8 @@ class ResumeParserService
 
     /**
      * Send raw text to Groq to extract structured resume data.
+     *
+     * @throws RuntimeException If the Groq API call fails.
      */
     private function structureWithGroq(string $rawText): array
     {
